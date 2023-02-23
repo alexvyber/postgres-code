@@ -1,0 +1,17 @@
+<p>Hi Everyone, Quick query to get the total revenues for a particular language say 'English'. Feel free to customize as per your needs and practice more. :)</p><pre class="prettyprint linenums">SELECT
+        d.director_id,
+        SUM(COALESCE(r.revenues_domestic,0) + COALESCE(r.revenues_international,0)) AS "totaL_reveneues"
+    FROM directors d
+    INNER JOIN movies mv ON mv.director_id = d.director_id
+    INNER JOIN movies_revenues r ON r.movie_id = mv.movie_id
+    WHERE
+        COALESCE(r.revenues_domestic,0) + COALESCE(r.revenues_international,0) &gt;
+        (
+            SELECT
+                AVG(COALESCE(r.revenues_domestic,0) + COALESCE(r.revenues_international,0)) as "avg_total_reveneues"
+            FROM movies_revenues r
+            INNER JOIN movies mv ON mv.movie_id = r.movie_id
+            WHERE mv.movie_lang = 'English'
+        )
+    GROUP BY d.director_id
+    ORDER BY 2 DESC, 1 ASC</pre><p><br></p>

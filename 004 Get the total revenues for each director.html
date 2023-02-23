@@ -1,0 +1,17 @@
+<p>Here is an updated CTE query to get the total revenues for each director.</p><pre class="prettyprint linenums">WITH cte_movie_count AS
+    (
+        SELECT
+            d.director_id,
+            SUM(COALESCE(r.revenues_domestic,0) + COALESCE(r.revenues_international,0)) AS total_revenues
+        FROM directors d
+        INNER JOIN movies mv ON mv.director_id = d.director_id
+        INNER JOIN movies_revenues r ON r.movie_id = mv.movie_id
+        GROUP BY d.director_id
+    )
+    SELECT
+       d.director_id,
+       d.first_name,
+       d.last_name,
+       cte.total_revenues
+    FROM cte_movie_count cte
+    INNER JOIN directors d ON d.director_id = cte.director_id;</pre><p>Enjoy!!</p>
